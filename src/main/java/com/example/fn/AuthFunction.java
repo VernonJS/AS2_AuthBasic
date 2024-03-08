@@ -55,18 +55,19 @@ public class AuthFunction {
 
         if (input.token == null || !input.token.startsWith(TOKEN_BEARER_PREFIX)) {
             result.active = false;
-            result.wwwAuthenticate = "Bearer error=\"missing_token\"";
+            result.wwwAuthenticate = "Bearer error=\"missing_token\"" + input;
             System.out.println("oci-apigw-authorizer-idcs-java END (Token)");
             return result;
         }
 
         // remove "Bearer " prefix in the token string before processing
-        String token = input.token.substring(TOKEN_BEARER_PREFIX.length());
-
-        AccessTokenValidator accessTokenValidator = new AccessTokenValidator();
-        accessTokenValidator.init();
+       
 
         try {
+            String token = input.token.substring(TOKEN_BEARER_PREFIX.length());
+
+            AccessTokenValidator accessTokenValidator = new AccessTokenValidator();
+            accessTokenValidator.init();
             JWTClaimsSet claimsSet = accessTokenValidator.validate(token, input.audClaim, input.scopeClaim);
 
             // Now that we can trust the contents of the JWT we can build the APIGW auth result
@@ -86,6 +87,11 @@ public class AuthFunction {
             result.active = false;
             result.wwwAuthenticate = "Bearer error=\"invalid_token\", error_description=\"" + e.getMessage() + "\"";
         } catch (ParseException ex) {
+            ex.printStackTrace();
+
+            result.active = false;
+            result.wwwAuthenticate = "Bearer error=\"invalid_token_claim\", error_description=\"" + ex.getMessage() + "\"";
+        } catch (Throwable ex) {
             ex.printStackTrace();
 
             result.active = false;

@@ -1,7 +1,7 @@
 schema_version: 20180708
 name: oci-apigw-authorizer-idcs-java
-version: 0.0.9
+version: 0.0.5
 runtime: java
-build_image: fnproject/fn-java-fdk-build:jdk11-1.0.130
-run_image: fnproject/fn-java-fdk:jre11-1.0.130
+build_image: fnproject/fn-java-fdk-build:jdk17-1.0.185
+run_image: fnproject/fn-java-fdk:jre17-1.0.185
 cmd: com.example.fn.AuthFunction::handleRequest
