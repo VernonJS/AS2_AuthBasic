@@ -67,7 +67,7 @@ public class AuthFunctionTest {
 //    @Test
     public void shouldReturnActive() throws Exception {
         SecretReader secretReader = new SecretReader();
-        JsonNode contents = secretReader.getSecretContents("ocid1.vaultsecret.oc1.phx.amaaaaaavt5ng4aaoxegfwn4wqmf3jevsfsm2bwulr4uwaintojgr2yudsja");
+        JsonNode contents = secretReader.getSecretContents("<ocid1.vaultsecret...>");
 
         ResourceServerConfig resourceServerConfig = new ResourceServerConfig(contents);
 
@@ -79,7 +79,7 @@ public class AuthFunctionTest {
         final String input = String.format(INPUT_FORMAT, token,
                 resourceServerConfig.getOIC_CLIENT_SCOPE().split("com:443")[1],
                 resourceServerConfig.getOIC_CLIENT_SCOPE().split("urn:")[0],
-                "ocid1.vaultsecret.oc1.phx.amaaaaaavt5ng4aaoxegfwn4wqmf3jevsfsm2bwulr4uwaintojgr2yudsja");
+                "<ocid1.vaultsecret...>");
 
         System.out.println(input);
         testing.givenEvent().withBody(input).enqueue();

@@ -11,7 +11,7 @@ public class SecretReaderTest {
     public void testGetSecretContents() throws IOException {
 //        System.setProperty("isDev","true");
         SecretReader secretReader = new SecretReader();
-        System.out.println(secretReader.getSecretContents("ocid1.vaultsecret.oc1.phx.amaaaaaavt5ng4aaoxegfwn4wqmf3jevsfsm2bwulr4uwaintojgr2yudsja").toPrettyString());
+        System.out.println(secretReader.getSecretContents("<ocid1.vaultsecret...>").toPrettyString());
     }
 
 }
