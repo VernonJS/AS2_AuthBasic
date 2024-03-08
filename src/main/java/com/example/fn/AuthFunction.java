@@ -27,6 +27,11 @@ public class AuthFunction {
 
     public static class Input {
         public String type;
+        public Data data;
+
+    }
+
+    public static class Data {
         public String token;
 
     }
@@ -52,7 +57,7 @@ public class AuthFunction {
         System.out.println("oci-apigw-authorizer-idcs-java START");
         Result result = new Result();
 
-        if (input.token == null || !input.token.toLowerCase().startsWith(TOKEN_BEARER_PREFIX.toLowerCase())) {
+        if (input.data == null || input.data.token == null|| !input.data.token.toLowerCase().startsWith(TOKEN_BEARER_PREFIX.toLowerCase())) {
             System.err.println("oci-apigw-authorizer-idcs-java MISSING BEARER TOKEN");
             result.active = false;
             result.wwwAuthenticate = "Bearer error=\"missing_token\"" + input;
@@ -63,7 +68,7 @@ public class AuthFunction {
         // remove "Bearer " prefix in the token string before processing
 
         try {
-            String token = input.token.substring(TOKEN_BEARER_PREFIX.length());
+            String token = input.data.token.substring(TOKEN_BEARER_PREFIX.length());
 
             String secretOcid = System.getenv("secretOcid");
             String aud = System.getenv("aud");
