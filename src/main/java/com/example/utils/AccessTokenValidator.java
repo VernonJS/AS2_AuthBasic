@@ -61,7 +61,7 @@ public class AccessTokenValidator {
     }
 
     //checks if the token is valid
-    public JWTClaimsSet validate(String accessToken, String audClaim, String scopeClaim) {
+    public JWTClaimsSet validate(String accessToken, String audClaim) {
         if(AccessTokenValidator.isSafe){
 
             try {
@@ -70,16 +70,9 @@ public class AccessTokenValidator {
 
                 //VALIDATE AUDIENCE
                 if (claimsSet.getAudience().indexOf(audClaim) >= 0 ) {
-                    //CORRECT AUDIENCE, check scope
-                    if(scopeClaim!=null){
-                        if(claimsSet.getStringClaim("scope").equals(scopeClaim)){
-                            return claimsSet;
-                        } else{
-                            throw new InvalidTokenException("Incorrect scope");
-                        }
-                    }else {
-                        return claimsSet;
-                    }
+                    //CORRECT AUDIENCE,
+                    return claimsSet;
+
                 } else {
                     throw new InvalidTokenException("Incorrect audience");
                 }

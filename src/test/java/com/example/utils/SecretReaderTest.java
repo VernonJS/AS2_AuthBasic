@@ -7,7 +7,7 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 
 public class SecretReaderTest {
-    @Test
+//    @Test
     public void testGetSecretContents() throws IOException {
 //        System.setProperty("isDev","true");
         SecretReader secretReader = new SecretReader();

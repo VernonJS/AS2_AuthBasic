@@ -28,10 +28,7 @@ public class AuthFunction {
     public static class Input {
         public String type;
         public String token;
-        public String scope;
-        public String aud;
 
-        public String secretOcid;
     }
 
     public static class Result {
@@ -68,13 +65,15 @@ public class AuthFunction {
         try {
             String token = input.token.substring(TOKEN_BEARER_PREFIX.length());
 
+            String secretOcid = System.getenv("secretOcid");
+            String aud = System.getenv("aud");
             SecretReader secretReader = new SecretReader();
-            JsonNode secretContents = secretReader.getSecretContents(input.secretOcid);
+            JsonNode secretContents = secretReader.getSecretContents(secretOcid);
 
             ResourceServerConfig resourceServerConfig = new ResourceServerConfig(secretContents);
             AccessTokenValidator accessTokenValidator = new AccessTokenValidator();
             accessTokenValidator.init(resourceServerConfig);
-            JWTClaimsSet claimsSet = accessTokenValidator.validate(token, input.aud, input.scope);
+            JWTClaimsSet claimsSet = accessTokenValidator.validate(token, aud);
 
 
 

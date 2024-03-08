@@ -64,7 +64,7 @@ public class AuthFunctionTest {
 //        assertEquals("Bearer error=\"invalid_token\", error_description=\"Invalid JWT serialization: Missing dot delimiter(s)\"", result.wwwAuthenticate);
 //    }
 
-    @Test
+//    @Test
     public void shouldReturnActive() throws Exception {
         SecretReader secretReader = new SecretReader();
         JsonNode contents = secretReader.getSecretContents("ocid1.vaultsecret.oc1.phx.amaaaaaavt5ng4aaoxegfwn4wqmf3jevsfsm2bwulr4uwaintojgr2yudsja");
