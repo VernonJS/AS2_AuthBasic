@@ -22,22 +22,22 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class JWKUtil {
 
-    public static void main(String asdasd[]){
-        try {
-            JWKSet jwk = JWKUtil.getJWK();
-            System.out.println("jwk = "+jwk.toString());
-        } catch (Exception ex) {
-            Logger.getLogger(JWKUtil.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public static void main(String asdasd[]){
+//        try {
+//            JWKSet jwk = JWKUtil.getJWK(resourceServerConfig);
+//            System.out.println("jwk = "+jwk.toString());
+//        } catch (Exception ex) {
+//            Logger.getLogger(JWKUtil.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
     /**
      * Retrieve Identity Cloud Services Signing Key in JWK (JSON Web Key) format
      * @return Identity Cloud Services signing key
      */
-    public static JWKSet getJWK() throws Exception{
+    public static JWKSet getJWK(ResourceServerConfig resourceServerConfig) throws Exception{
         String jwk = null;
-        String authURL = ResourceServerConfig.JWK_URL;
+        String authURL = resourceServerConfig.getJWK_URL();
         Response httpResponse;
 
         //HEADERS
@@ -54,9 +54,9 @@ public class JWKUtil {
      * @return Access token
      * @throws Exception
      */
-    public static String getBearer(String clientId, String clientSecret, String scope) throws Exception{
+    public static String getBearer(String clientId, String clientSecret, String scope, String tokenUrl) throws Exception{
         String bearer = "";
-        String url = ResourceServerConfig.TOKEN_URL;
+        String url = tokenUrl;
         Response httpResponse;
 
         //HEADER
@@ -78,27 +78,14 @@ public class JWKUtil {
     public static Response doHttpRequest(final String urlStr,
                                          final String requestMethod, final String body,
                                          final Map<String, String> header) throws Exception {
-        return doHttpRequest(urlStr, requestMethod, body, header,
-            ResourceServerConfig.HAS_PROXY,
-            ResourceServerConfig.PROXY_HOST,
-            ResourceServerConfig.PROXY_PORT);
-    }
 
-    public static Response doHttpRequest(final String urlStr,
-                                         final String requestMethod, final String body,
-                                         final Map<String, String> header,
-                                         boolean useProxy, String proxyHost, int proxyPort) throws Exception {
         HttpURLConnection conn;
         try {
             URL url = new URL(urlStr);
             String completeUrl = (body != null) ? urlStr+"?"+body : urlStr;
             Logger.getLogger(JWKUtil.class.getName()).log(Level.INFO, "Request URL: "+completeUrl);
-            if (useProxy) {
-                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
-                conn = (HttpURLConnection) url.openConnection(proxy);
-            } else {
+
                 conn = (HttpURLConnection) url.openConnection();
-            }
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setInstanceFollowRedirects(true);

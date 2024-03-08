@@ -7,8 +7,8 @@
 
 package com.example.fn;
 
-import com.example.utils.AccessTokenValidator;
-import com.example.utils.InvalidTokenException;
+import com.example.utils.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.nimbusds.jwt.JWTClaimsSet;
 
 import java.text.DateFormat;
@@ -28,8 +28,10 @@ public class AuthFunction {
     public static class Input {
         public String type;
         public String token;
-        public String scopeClaim;
-        public String audClaim;
+        public String scope;
+        public String aud;
+
+        public String secretOcid;
     }
 
     public static class Result {
@@ -53,7 +55,8 @@ public class AuthFunction {
         System.out.println("oci-apigw-authorizer-idcs-java START");
         Result result = new Result();
 
-        if (input.token == null || !input.token.startsWith(TOKEN_BEARER_PREFIX)) {
+        if (input.token == null || !input.token.toLowerCase().startsWith(TOKEN_BEARER_PREFIX.toLowerCase())) {
+            System.err.println("oci-apigw-authorizer-idcs-java MISSING BEARER TOKEN");
             result.active = false;
             result.wwwAuthenticate = "Bearer error=\"missing_token\"" + input;
             System.out.println("oci-apigw-authorizer-idcs-java END (Token)");
@@ -61,14 +64,19 @@ public class AuthFunction {
         }
 
         // remove "Bearer " prefix in the token string before processing
-       
 
         try {
             String token = input.token.substring(TOKEN_BEARER_PREFIX.length());
 
+            SecretReader secretReader = new SecretReader();
+            JsonNode secretContents = secretReader.getSecretContents(input.secretOcid);
+
+            ResourceServerConfig resourceServerConfig = new ResourceServerConfig(secretContents);
             AccessTokenValidator accessTokenValidator = new AccessTokenValidator();
-            accessTokenValidator.init();
-            JWTClaimsSet claimsSet = accessTokenValidator.validate(token, input.audClaim, input.scopeClaim);
+            accessTokenValidator.init(resourceServerConfig);
+            JWTClaimsSet claimsSet = accessTokenValidator.validate(token, input.aud, input.scope);
+
+
 
             // Now that we can trust the contents of the JWT we can build the APIGW auth result
             result.active = true;
@@ -77,8 +85,12 @@ public class AuthFunction {
             result.scope = claimsSet.getStringClaim("scope").split(" ");
             result.expiresAt = ISO8601.format(claimsSet.getExpirationTime().toInstant().atOffset(ZoneOffset.UTC));
 
+            String authorizationHeader = TOKEN_BEARER_PREFIX + JWKUtil.getBearer(resourceServerConfig.getOIC_CLIENT_ID(),
+                    resourceServerConfig.getOIC_CLIENT_SECRET(), resourceServerConfig.getOIC_CLIENT_SCOPE(),
+                    resourceServerConfig.getTOKEN_URL());
             Map<String, Object> context = new HashMap<>();
             context.put("tenant", claimsSet.getStringClaim("tenant"));
+            context.put("authorization",authorizationHeader);
             result.context = context;
 
         } catch (InvalidTokenException e) {

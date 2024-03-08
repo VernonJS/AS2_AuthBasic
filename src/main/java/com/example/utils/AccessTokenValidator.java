@@ -41,11 +41,13 @@ public class AccessTokenValidator {
     private static final ConfigurableJWTProcessor JWT_PROCESSOR = new DefaultJWTProcessor();
     private static JWKSource keySource;
     private static JWSKeySelector keySelector;
+     private static ResourceServerConfig resourceServerConfig;
 
-    public void init() {
+    public void init(ResourceServerConfig resourceServerConfig) {
         if(!AccessTokenValidator.isSafe) {
             try {
-                jwk = JWKUtil.getJWK();
+                this.resourceServerConfig = resourceServerConfig;
+                jwk = JWKUtil.getJWK(resourceServerConfig);
                 keySource = new ImmutableJWKSet(jwk);
                 keySelector = new JWSVerificationKeySelector(JWSAlgorithm.RS256, keySource);
                 JWT_PROCESSOR.setJWSKeySelector(keySelector);

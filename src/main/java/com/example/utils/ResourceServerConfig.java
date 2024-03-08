@@ -7,6 +7,8 @@
 
 package com.example.utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * It contains the resource server configuration and constants
  * Like a properties file, but simpler
@@ -14,24 +16,50 @@ package com.example.utils;
 public class ResourceServerConfig {
 
     //YOUR IDENTITY DOMAIN AND APPLICATION CREDENTIALS
-    public static final String CLIENT_ID = "";
-    public static final String CLIENT_SECRET = "";
-    public static final String IDCS_URL = "https://idcs-a4c987a4d84b4da094a25ae0fce5d6de.identity.oraclecloud.com:443";
+    private String IDCS_URL;
 
-    //INFORMATION ABOUT THE TARGET APPLICATION
-    public static final String SCOPE_AUD = "http://service1";
 
-    //TEST CLIENT CREDENTIALS
-    public static final String TEST_CLIENT_ID = "";
-    public static final String TEST_CLIENT_SECRET = "";
-    public static final String TEST_CLIENT_SCOPE = "http://service1urn:opc:resource:consumer::all";
+    //OIC CLIENT CREDENTIALS
+    private String OIC_CLIENT_ID;
+    private String OIC_CLIENT_SECRET;
+    private String OIC_CLIENT_SCOPE;
 
     //INFORMATION ABOUT IDENTITY CLOUD SERVICES
-    public static final String JWK_URL=IDCS_URL+"/admin/v1/SigningCert/jwk";
-    public static final String TOKEN_URL=IDCS_URL+"/oauth2/v1/token";
+    private  String JWK_URL ;
+    private  String TOKEN_URL ;
 
-    //PROXY
-    public static final boolean HAS_PROXY = false;
-    public static final String PROXY_HOST = "http://my.proxy.com";
-    public static final int PROXY_PORT = 80;
+    public String getIDCS_URL() {
+        return IDCS_URL;
+    }
+
+    public String getOIC_CLIENT_ID() {
+        return OIC_CLIENT_ID;
+    }
+
+    public String getOIC_CLIENT_SECRET() {
+        return OIC_CLIENT_SECRET;
+    }
+
+    public String getOIC_CLIENT_SCOPE() {
+        return OIC_CLIENT_SCOPE;
+    }
+
+    public String getJWK_URL() {
+        return JWK_URL;
+    }
+
+    public String getTOKEN_URL() {
+        return TOKEN_URL;
+    }
+
+    public  ResourceServerConfig(JsonNode secretContents) {
+
+        IDCS_URL = secretContents.get("idcs_base_url").textValue();
+        OIC_CLIENT_ID = secretContents.get("client_id").textValue();
+        OIC_CLIENT_SECRET = secretContents.get("client_secret").textValue();
+        OIC_CLIENT_SCOPE = secretContents.get("scope").textValue();
+
+       JWK_URL = IDCS_URL + "/admin/v1/SigningCert/jwk";
+       TOKEN_URL = IDCS_URL + "/oauth2/v1/token";
+    }
 }
