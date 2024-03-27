@@ -22,8 +22,6 @@ import java.util.Map;
 
 public class AuthFunction {
 
-    private static final DateTimeFormatter ISO8601 = DateTimeFormatter.ISO_DATE_TIME;
-    private static final String TOKEN_BEARER_PREFIX = "Bearer ";
 
     public static class Input {
         public String type;
@@ -79,11 +77,6 @@ public class AuthFunction {
 
             result.active = false;
             result.wwwAuthenticate = "Bearer error=\"invalid_token\", error_description=\"" + e.getMessage() + "\"";
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-
-            result.active = false;
-            result.wwwAuthenticate = "Bearer error=\"invalid_token_claim\", error_description=\"" + ex.getMessage() + "\"";
         } catch (Throwable ex) {
             ex.printStackTrace();
 
