@@ -37,21 +37,13 @@ public class AuthFunction {
     public static class Result {
         // required
         public boolean active = false;
-        public String principal;
-        public String[] scope;
-        public String expiresAt;
-
-        // optional
-        public String wwwAuthenticate;
-
-        // optional
-        public String clientId;
+        
 
         // optional context
         public Map<String, Object> context;
     }
 
-    public Result handleRequest(Input input) {
+    public Result handleRequest() {
         System.out.println("oci-apigw-authorizer-idcs-java START");
         Result result = new Result();
 
