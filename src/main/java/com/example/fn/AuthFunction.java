@@ -23,17 +23,6 @@ import java.util.Map;
 public class AuthFunction {
 
 
-    public static class Input {
-        public String type;
-        public Data data;
-
-    }
-
-    public static class Data {
-        public String token;
-
-    }
-
     public static class Result {
         // required
         public boolean active = false;
