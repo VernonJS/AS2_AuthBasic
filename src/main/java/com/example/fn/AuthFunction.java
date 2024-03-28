@@ -53,16 +53,10 @@ public class AuthFunction {
             context.put("authorization",authorizationHeader);
             result.context = context;
 
-        } catch (InvalidTokenException e) {
-            e.printStackTrace();
-
-            result.active = false;
-            result.wwwAuthenticate = "Bearer error=\"invalid_token\", error_description=\"" + e.getMessage() + "\"";
         } catch (Throwable ex) {
             ex.printStackTrace();
 
             result.active = false;
-            result.wwwAuthenticate = "Bearer error=\"invalid_token_claim\", error_description=\"" + ex.getMessage() + "\"";
         }
 
         System.out.println("oci-apigw-authorizer-idcs-java END");
