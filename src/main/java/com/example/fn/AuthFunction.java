@@ -37,9 +37,10 @@ public class AuthFunction {
         Result result = new Result();
 
 
-        try {
+        try{
 
             String secretOcid = System.getenv("secretOcid");
+            System.out.println("secretOcid" + secretOcid.text());
             SecretReader secretReader = new SecretReader();
             JsonNode secretContents = secretReader.getSecretContents(secretOcid);
 
@@ -49,6 +50,7 @@ public class AuthFunction {
             result.active = true;
 
             String authorizationHeader = resourceServerConfig.getAS2_SERVICEUSER_B64();
+            System.out.println("authheader" + authorizationHeader.text());
             Map<String, Object> context = new HashMap<>();
             context.put("authorization",authorizationHeader);
             result.context = context;
